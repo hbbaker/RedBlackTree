@@ -1,4 +1,13 @@
-public class RedBlackTree<K,V> {
+/**
+ * Implementation of a Red Black Tree for CS361
+ * @param <K>
+ * @param <V>
+ * @author Henry Baker
+ * @version 2023.30.10
+ */
+public class RedBlackTree<K extends Comparable<K>,V>{
+    Node root;
+
     private class Node {
         K key;
         V value;
@@ -7,11 +16,20 @@ public class RedBlackTree<K,V> {
 
         Node leftChild;
         Node rightChild;
-        Node parent;
+        //Node parent;
+
+        public Node(K key, V value, boolean color, Node left, Node right) {
+            this.key = key;
+            this.value = value;
+            isRed = color;
+            leftChild = left;
+            rightChild = right;
+            //parent = p;
+        }
     }
 
     public RedBlackTree() {
-
+        root = null;
     }
 
     public void put(K key, V value) {
@@ -88,5 +106,108 @@ public class RedBlackTree<K,V> {
 
     public double calcAverageDepth() {
         return 0.0;
+    }
+
+    // PRIVATE METHODS
+    // ---------------
+
+    /**
+     *
+     * @param root
+     * @param key
+     * @param value
+     * @return
+     */
+    private Node findAndAdd(Node root, K key, V value) {
+        if(root == null) {
+            root = new Node(key, value, true, null, null);
+            return root;
+        }
+        if(key.compareTo(root.key) == 0) {
+            root.value = value;
+            return root;
+        }
+        if(key.compareTo(root.key) < 0) {
+            root.leftChild = findAndAdd(root.leftChild, key, value);
+        } else {
+            root.rightChild = findAndAdd(root.rightChild, key, value);
+        }
+        // Fix Broken Tree Structure
+        // 1. If left child is black and right child is red, ROTATE LEFT
+        // 2. If left child and left-left grandchild are red, ROTATE RIGHT
+        // 3. If both children are red, COLOR FLIP
+        return root;
+    }
+
+    /**
+     * Left Rotation helper method
+     * @param current The current "root node" to perform the rotation from.
+     */
+    private void rotateRight(Node current) {
+        K key = current.key;
+        V val = current.value;
+        Node temp = current.rightChild;
+
+        // SWAP left to current and current to left
+        current.key = current.leftChild.key;
+        current.value = current.leftChild.value;
+
+        current.leftChild.key = key;
+        current.leftChild.value = val;
+
+
+        // Current right child becomes left
+        current.rightChild = current.leftChild;
+
+        // right - left grandchild becomes left child
+        current.leftChild = current.rightChild.leftChild;
+
+        // moves my right-right grandchild to be right-left grandchild
+        current.rightChild.leftChild = current.rightChild.rightChild;
+
+        // right-right grandchild is now original right child of current
+        current.rightChild.rightChild = temp;
+    }
+
+    /**
+     * Right Rotation helper method...
+     * @param current The current "root node" to perform the rotation from.
+     */
+    private void rotateLeft(Node current) {
+        K key = current.key;
+        V val = current.value;
+        Node temp = current.leftChild;
+
+        // SWAP right to current and current to right
+        current.key = current.rightChild.key;
+        current.value = current.rightChild.value;
+
+        current.rightChild.key = key;
+        current.rightChild.value = val;
+
+
+        // Current left child becomes right
+        current.leftChild = current.rightChild;
+
+        // left - right grandchild becomes right child
+        current.rightChild = current.leftChild.rightChild;
+
+        // moves my left-left grandchild to be left-right grandchild
+        current.leftChild.rightChild = current.leftChild.leftChild;
+
+        // left-left grandchild is now original right child of current
+        current.leftChild.leftChild = temp;
+    }
+
+    /**
+     * Color Flip helper method
+     * @param current The "root node" to do the Color Flip on.
+     */
+    private void colorFlip(Node current) {
+        current.leftChild.isRed = !current.leftChild.isRed;
+        current.rightChild.isRed = !current.rightChild.isRed;
+        current.isRed = !current.isRed;
+
+        assert((current.leftChild.isRed != current.isRed) && (current.rightChild.isRed != current.isRed));
     }
 }
