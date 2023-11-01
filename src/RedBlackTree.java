@@ -246,10 +246,8 @@ public class RedBlackTree<K extends Comparable<K>,V>{
         }
         if(key.compareTo(root.key) < 0) {
             root.leftChild = findAndAdd(root.leftChild, key, value);
-            //root.updateSize();
         } else {
             root.rightChild = findAndAdd(root.rightChild, key, value);
-            //root.updateSize();
         }
 
         // Fix Broken Tree Structure
