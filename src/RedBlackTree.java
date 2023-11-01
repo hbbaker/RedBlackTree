@@ -8,6 +8,9 @@
 public class RedBlackTree<K extends Comparable<K>,V>{
     Node root;
 
+    /**
+     * Private Node Class that drives RedBlackTree structure
+     */
     private class Node {
         K key;
         V value;
@@ -18,6 +21,14 @@ public class RedBlackTree<K extends Comparable<K>,V>{
         Node rightChild;
         //Node parent;
 
+        /**
+         * Constructor for internal Node class for RedBlackTree
+         * @param key Key stored in the node
+         * @param value Value stored in the node
+         * @param color The color of the node
+         * @param left Reference to the Left Child of Node
+         * @param right Reference to the Right Child of Node
+         */
         public Node(K key, V value, boolean color, Node left, Node right) {
             this.key = key;
             this.value = value;
@@ -29,10 +40,18 @@ public class RedBlackTree<K extends Comparable<K>,V>{
         }
     }
 
+    /**
+     * Constructor for RedBlackTree
+     */
     public RedBlackTree() {
         root = null;
     }
 
+    /**
+     * Puts a value for a given key into the RedBlackTree
+     * @param key The key to be put
+     * @param value The value to be put at key
+     */
     public void put(K key, V value) {
         root = findAndAdd(root, key, value);
         root.isRed = false;
@@ -75,14 +94,14 @@ public class RedBlackTree<K extends Comparable<K>,V>{
     }
 
     public K getRootKey() {
-        return null;
+        return this.root.key;
     }
 
     public K findPredecessor(K key) {
         return null;
     }
 
-    public K findSuccessor() {
+    public K findSuccessor(K key) {
         return null;
     }
 
@@ -134,29 +153,49 @@ public class RedBlackTree<K extends Comparable<K>,V>{
         }
         if(key.compareTo(root.key) < 0) {
             root.leftChild = findAndAdd(root.leftChild, key, value);
-            root.size = root.leftChild.size + root.rightChild.size + 1;
+            if(root.rightChild == null) {
+                root.size = 2;
+            } else {
+                root.size = root.leftChild.size + root.rightChild.size + 1;
+            }
         } else {
             root.rightChild = findAndAdd(root.rightChild, key, value);
-            root.size = root.leftChild.size + root.rightChild.size + 1;
+            if(root.leftChild == null) {
+                root.size = 2;
+            } else {
+                root.size = root.leftChild.size + root.rightChild.size + 1;
+            }
         }
+
         // Fix Broken Tree Structure
-        // 1. If left child is black and right child is red, ROTATE LEFT
-        if(!root.leftChild.isRed && root.rightChild.isRed) {
+
+        // 1. If current is black and right child is red, ROTATE LEFT
+        if (root.rightChild != null && !root.isRed && root.rightChild.isRed) {
+            System.out.println("Rotated " + root.key + " Left");
             rotateLeft(root);
         }
+
         // 2. If left child and left-left grandchild are red, ROTATE RIGHT
-        if(root.leftChild.isRed && root.leftChild.leftChild.isRed) {
-            rotateRight(root);
+        if(root.leftChild != null && root.leftChild.leftChild != null) {
+            if(root.leftChild.isRed && root.leftChild.leftChild.isRed) {
+                System.out.println("Rotated " + root.key +" Right");
+                rotateRight(root);
+            }
         }
-        // 3. If both children are red, COLOR FLIP
-        if(root.leftChild.isRed && root.rightChild.isRed) {
-            colorFlip(root);
+
+            // 3. If both children are red, COLOR FLIP
+        if(root.leftChild != null && root.rightChild != null) {
+            if(root.leftChild.isRed && root.rightChild.isRed) {
+                colorFlip(root);
+                System.out.println("Color Flipped " + root.key);
+            }
         }
+
         return root;
     }
 
     /**
-     * Left Rotation helper method
+     * Right Rotation helper method
      * @param current The current "root node" to perform the rotation from.
      */
     private void rotateRight(Node current) {
@@ -172,21 +211,31 @@ public class RedBlackTree<K extends Comparable<K>,V>{
         current.leftChild.value = val;
 
 
-        // Current right child becomes left
+        // Current right child becomes left && remove left
         current.rightChild = current.leftChild;
+        current.leftChild = null;
 
         // right - left grandchild becomes left child
-        current.leftChild = current.rightChild.leftChild;
+        if(current.rightChild.leftChild != null) {
+            current.leftChild = current.rightChild.leftChild;
+            current.rightChild.leftChild = null;
+        }
 
         // moves my right-right grandchild to be right-left grandchild
-        current.rightChild.leftChild = current.rightChild.rightChild;
+        if(current.rightChild.rightChild != null) {
+            current.rightChild.leftChild = current.rightChild.rightChild;
+            current.rightChild.rightChild = null;
+        }
+
 
         // right-right grandchild is now original right child of current
-        current.rightChild.rightChild = temp;
+        if(temp != null) {
+            current.rightChild.rightChild = temp;
+        }
     }
 
     /**
-     * Right Rotation helper method...
+     * Left Rotation helper method...
      * @param current The current "root node" to perform the rotation from.
      */
     private void rotateLeft(Node current) {
@@ -202,17 +251,27 @@ public class RedBlackTree<K extends Comparable<K>,V>{
         current.rightChild.value = val;
 
 
-        // Current left child becomes right
+        // Current left child becomes right & remove right
         current.leftChild = current.rightChild;
+        current.rightChild = null;
 
         // left - right grandchild becomes right child
-        current.rightChild = current.leftChild.rightChild;
+        if(current.leftChild.rightChild != null) {
+            current.rightChild = current.leftChild.rightChild;
+            current.leftChild.rightChild = null;
+        }
 
         // moves my left-left grandchild to be left-right grandchild
-        current.leftChild.rightChild = current.leftChild.leftChild;
+        if(current.leftChild.leftChild != null) {
+            current.leftChild.rightChild = current.leftChild.leftChild;
+            current.leftChild.leftChild = null;
+        }
+
 
         // left-left grandchild is now original right child of current
-        current.leftChild.leftChild = temp;
+        if(temp != null) {
+            current.leftChild.leftChild = temp;
+        }
     }
 
     /**
