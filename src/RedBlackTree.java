@@ -34,7 +34,8 @@ public class RedBlackTree<K extends Comparable<K>,V>{
     }
 
     public void put(K key, V value) {
-
+        root = findAndAdd(root, key, value);
+        root.isRed = false;
     }
 
     public V get(K key) {
