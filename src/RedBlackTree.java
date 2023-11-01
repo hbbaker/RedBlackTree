@@ -51,6 +51,20 @@ public class RedBlackTree<K extends Comparable<K>,V>{
             }
             this.size = size;
         }
+
+        /**
+         * Helper to find the Predecessor of a node.
+         */
+        private void findPredecessor() {
+
+        }
+
+        /**
+         * Helper to find the Successor of a node.
+         */
+        private void findSuccessor() {
+
+        }
     }
 
     /**
