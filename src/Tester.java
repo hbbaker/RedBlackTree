@@ -11,6 +11,7 @@ public class Tester {
         tree.put('C', 4);
         tree.put('H', 16);
         System.out.println(tree.getRootKey());
+        System.out.println(tree.size());
 
         assert(tree.getRootKey() == 'R');
 

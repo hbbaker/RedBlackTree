@@ -25,18 +25,31 @@ public class RedBlackTree<K extends Comparable<K>,V>{
          * Constructor for internal Node class for RedBlackTree
          * @param key Key stored in the node
          * @param value Value stored in the node
-         * @param color The color of the node
          * @param left Reference to the Left Child of Node
          * @param right Reference to the Right Child of Node
          */
-        public Node(K key, V value, boolean color, Node left, Node right) {
+        public Node(K key, V value, Node left, Node right) {
             this.key = key;
             this.value = value;
             this.size = 1;
-            isRed = color;
+            isRed = true;
             leftChild = left;
             rightChild = right;
             //parent = p;
+        }
+
+        /**
+         * Updates the size of the node based on its children
+         */
+        private void updateSize() {
+            int size = 1;
+            if(leftChild != null) {
+                size += leftChild.size;
+            }
+            if(rightChild != null) {
+                size += rightChild.size;
+            }
+            this.size = size;
         }
     }
 
@@ -57,74 +70,155 @@ public class RedBlackTree<K extends Comparable<K>,V>{
         root.isRed = false;
     }
 
+    /**
+     *
+     * @param key
+     * @return
+     */
     public V get(K key) {
         return null;
     }
 
+    /**
+     *
+     * @param key
+     * @return
+     */
     public V delete(K key) {
         return null;
     }
 
+    /**
+     *
+     * @param key
+     * @return
+     */
     public boolean containsKey(K key) {
         return false;
     }
 
+    /**
+     *
+     * @param value
+     * @return
+     */
     public boolean containsValue(V value) {
         return false;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isEmpty() {
         return false;
     }
 
+    /**
+     *
+     * @return
+     */
     public int size() {
-        return 0;
+        return this.root.size;
     }
 
+    /**
+     *
+     * @param value
+     * @return
+     */
     public K reverseLookup(V value) {
         return null;
     }
 
+    /**
+     *
+     * @return
+     */
     public K findFirstKey() {
         return null;
     }
 
+    /**
+     *
+     * @return
+     */
     public K findLastKey() {
         return null;
     }
 
+    /**
+     *
+     * @return
+     */
     public K getRootKey() {
         return this.root.key;
     }
 
+    /**
+     *
+     * @param key
+     * @return
+     */
     public K findPredecessor(K key) {
         return null;
     }
 
+    /**
+     *
+     * @param key
+     * @return
+     */
     public K findSuccessor(K key) {
         return null;
     }
 
+    /**
+     *
+     * @param key
+     * @return
+     */
     public int findRank(K key) {
         return 0;
     }
 
+    /**
+     *
+     * @param rank
+     * @return
+     */
     public K select(int rank) {
         return null;
     }
 
+    /**
+     *
+     * @return
+     */
     public int countRedNodes() {
         return 0;
     }
 
+    /**
+     *
+     * @return
+     */
     public int calcHeight() {
         return 0;
     }
 
+    /**
+     *
+     * @return
+     */
     public int calcBlackHeight() {
         return 0;
     }
 
+    /**
+     *
+     * @return
+     */
     public double calcAverageDepth() {
         return 0.0;
     }
@@ -143,8 +237,7 @@ public class RedBlackTree<K extends Comparable<K>,V>{
     private Node findAndAdd(Node root, K key, V value) {
         // WRITE TESTS
         if(root == null) {
-            root = new Node(key, value, true, null, null);
-            root.size = 1;
+            root = new Node(key, value,null, null);
             return root;
         }
         if(key.compareTo(root.key) == 0) {
@@ -153,18 +246,10 @@ public class RedBlackTree<K extends Comparable<K>,V>{
         }
         if(key.compareTo(root.key) < 0) {
             root.leftChild = findAndAdd(root.leftChild, key, value);
-            if(root.rightChild == null) {
-                root.size = 2;
-            } else {
-                root.size = root.leftChild.size + root.rightChild.size + 1;
-            }
+            //root.updateSize();
         } else {
             root.rightChild = findAndAdd(root.rightChild, key, value);
-            if(root.leftChild == null) {
-                root.size = 2;
-            } else {
-                root.size = root.leftChild.size + root.rightChild.size + 1;
-            }
+            //root.updateSize();
         }
 
         // Fix Broken Tree Structure
@@ -190,6 +275,8 @@ public class RedBlackTree<K extends Comparable<K>,V>{
                 System.out.println("Color Flipped " + root.key);
             }
         }
+
+        root.updateSize();
 
         return root;
     }
@@ -232,6 +319,8 @@ public class RedBlackTree<K extends Comparable<K>,V>{
         if(temp != null) {
             current.rightChild.rightChild = temp;
         }
+
+        current.rightChild.updateSize();
     }
 
     /**
@@ -272,6 +361,8 @@ public class RedBlackTree<K extends Comparable<K>,V>{
         if(temp != null) {
             current.leftChild.leftChild = temp;
         }
+
+        current.leftChild.updateSize();
     }
 
     /**
