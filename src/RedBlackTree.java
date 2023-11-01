@@ -21,6 +21,7 @@ public class RedBlackTree<K extends Comparable<K>,V>{
         public Node(K key, V value, boolean color, Node left, Node right) {
             this.key = key;
             this.value = value;
+            this.size = 1;
             isRed = color;
             leftChild = left;
             rightChild = right;
@@ -112,15 +113,18 @@ public class RedBlackTree<K extends Comparable<K>,V>{
     // ---------------
 
     /**
+     * Find and Add Method to help the put() method in RedBlackTree (recursive).
      *
-     * @param root
-     * @param key
-     * @param value
-     * @return
+     * @param root The node to begin the find and add from
+     * @param key The key to be put in the tree
+     * @param value The value associated with key
+     * @return The node added to the list or the node whose value was updated
      */
     private Node findAndAdd(Node root, K key, V value) {
+        // WRITE TESTS
         if(root == null) {
             root = new Node(key, value, true, null, null);
+            root.size = 1;
             return root;
         }
         if(key.compareTo(root.key) == 0) {
@@ -129,13 +133,24 @@ public class RedBlackTree<K extends Comparable<K>,V>{
         }
         if(key.compareTo(root.key) < 0) {
             root.leftChild = findAndAdd(root.leftChild, key, value);
+            root.size = root.leftChild.size + root.rightChild.size + 1;
         } else {
             root.rightChild = findAndAdd(root.rightChild, key, value);
+            root.size = root.leftChild.size + root.rightChild.size + 1;
         }
         // Fix Broken Tree Structure
         // 1. If left child is black and right child is red, ROTATE LEFT
+        if(!root.leftChild.isRed && root.rightChild.isRed) {
+            rotateLeft(root);
+        }
         // 2. If left child and left-left grandchild are red, ROTATE RIGHT
+        if(root.leftChild.isRed && root.leftChild.leftChild.isRed) {
+            rotateRight(root);
+        }
         // 3. If both children are red, COLOR FLIP
+        if(root.leftChild.isRed && root.rightChild.isRed) {
+            colorFlip(root);
+        }
         return root;
     }
 
