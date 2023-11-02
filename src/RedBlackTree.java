@@ -99,7 +99,15 @@ public class RedBlackTree<K extends Comparable<K>,V>{
      * @return
      */
     public V delete(K key) {
-        return null;
+        if(root == null) {
+            return null;
+        }
+        root.isRed = true;
+        root = findAndDelete(root, null, key);
+        if(root != null) {
+            root.isRed = false;
+        }
+        return root.value;
     }
 
     /**
@@ -295,7 +303,7 @@ public class RedBlackTree<K extends Comparable<K>,V>{
             }
         }
 
-            // 3. If both children are red, COLOR FLIP
+        // 3. If both children are red, COLOR FLIP
         if(root.leftChild != null && root.rightChild != null) {
             if(root.leftChild.isRed && root.rightChild.isRed) {
                 colorFlip(root);
@@ -312,23 +320,63 @@ public class RedBlackTree<K extends Comparable<K>,V>{
      *
      * @param root
      * @param key
-     * @param value
      * @return
      */
-    private Node findAndDelete(Node root, K key, V value) {
+    private Node findAndDelete(Node root, Node found, K key) {
+
         if(root == null) {
             return root;
         }
-        // No children (leaf case)
+
+
+        // Case 0: No children (leaf case)
         if(root.leftChild == null && root.rightChild == null && root.key.compareTo(key) == 0){
-            return null;
+            found = root;
+            root = null;
+            return found;
         }
 
-        // 1 child case (left red leaf as child)
+        // Case 1: 1 child case (left red leaf as child)
+        //TODO - See if red check is redundant, since only possibility
         if(root.leftChild != null && root.leftChild.isRed && root.rightChild == null) {
-
+            if(root.key.compareTo(key) == 0) {
+                root = root.leftChild;
+                return root;
+            }
+            root = findAndDelete(root.leftChild, null, key);
         }
-        return root;
+
+        //Case 2: 2 Black Node Children
+        if(root.leftChild != null && root.rightChild != null) {
+            Node temp = null;
+            if(!root.leftChild.isRed && !root.rightChild.isRed) {
+                colorFlip(root);
+                // Found node to delete?
+                if(root.key.compareTo(key) == 0) {
+                    found = root;
+                }
+                //TODO - Right or Left
+                found = findAndDelete(root.leftChild, found, key); // TODO - FOUND IS PASSED ALL THE WAY DOWN AND NOT CHANGED!
+                // Delete unnecessary node at end if I found node to delete
+                if(found == root) {
+                    root = null;
+                    return found;
+                }
+                // Check if back to found node to delete, swap values and then return found on the way up.
+                if(root.key.compareTo(key) == 0) {
+                    temp = root;
+                    root.key = found.key;
+                    root.value = found.value;
+                    found.key = temp.key;
+                    found.value = temp.value;
+                }
+                // TODO - Fix Red Black errors caused by recursion
+            }
+        }
+
+        // Case 3: Red Left Child and Black Right Child
+
+        return found;
     }
 
     /**
