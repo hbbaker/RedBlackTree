@@ -24,6 +24,6 @@ public class Tester {
         assert(tree2.getRootKey() == 'D');
 
         int testInt = tree2.delete('D');
-
+        System.out.println(testInt);
     }
 }

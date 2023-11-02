@@ -8,6 +8,7 @@
 public class RedBlackTree<K extends Comparable<K>,V>{
     Node root;
 
+
     /**
      * Private Node Class that drives RedBlackTree structure
      */
@@ -107,7 +108,11 @@ public class RedBlackTree<K extends Comparable<K>,V>{
         if(root != null) {
             root.isRed = false;
         }
-        return root.value;
+        if(root != null) {
+            return root.value;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -323,17 +328,18 @@ public class RedBlackTree<K extends Comparable<K>,V>{
      * @return
      */
     private Node findAndDelete(Node root, Node found, K key) {
+        Node temp = null;
 
         if(root == null) {
-            return root;
+            return null;
         }
 
 
         // Case 0: No children (leaf case)
         if(root.leftChild == null && root.rightChild == null && root.key.compareTo(key) == 0){
-            found = root;
+            temp = root;
             root = null;
-            return found;
+            return temp;
         }
 
         // Case 1: 1 child case (left red leaf as child)
@@ -348,35 +354,45 @@ public class RedBlackTree<K extends Comparable<K>,V>{
 
         //Case 2: 2 Black Node Children
         if(root.leftChild != null && root.rightChild != null) {
-            Node temp = null;
             if(!root.leftChild.isRed && !root.rightChild.isRed) {
                 colorFlip(root);
                 // Found node to delete?
                 if(root.key.compareTo(key) == 0) {
-                    found = root;
+                    temp = root;
+                    // TODO - Right or Left
+                    // Continue down to find predecessor or successor
+                    root = findAndDelete(root.leftChild, temp, key); // TODO - FOUND IS PASSED ALL THE WAY DOWN AND NOT CHANGED!
                 }
-                //TODO - Right or Left
-                found = findAndDelete(root.leftChild, found, key); // TODO - FOUND IS PASSED ALL THE WAY DOWN AND NOT CHANGED!
-                // Delete unnecessary node at end if I found node to delete
-                if(found == root) {
+                // Continue down to find if not node we want to delete
+                if(root.key.compareTo(key) < 0) {
+                    root = findAndDelete(root.leftChild, null, key);
+                } else {
+                    root = findAndDelete(root.rightChild, null, key);
+                }
+
+                //TODO - Does this check for swap happen inside this case or up top by base case?
+                if(found != null && root.rightChild == null) {
+                    temp = root;
                     root = null;
-                    return found;
+                    return temp;
                 }
                 // Check if back to found node to delete, swap values and then return found on the way up.
-                if(root.key.compareTo(key) == 0) {
+                if(found != null && root.key.compareTo(key) == 0) {
                     temp = root;
                     root.key = found.key;
                     root.value = found.value;
                     found.key = temp.key;
                     found.value = temp.value;
                 }
-                // TODO - Fix Red Black errors caused by recursion
+
             }
         }
 
-        // Case 3: Red Left Child and Black Right Child
+        // TODO - Case 3: Red Left Child and Black Right Child
 
-        return found;
+        // TODO - Fix Red Black errors caused by recursion
+
+        return root;
     }
 
     /**
