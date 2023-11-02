@@ -222,16 +222,25 @@ public class RedBlackTree<K extends Comparable<K>,V>{
     }
 
     /**
-     *
-     * @return
+     * Calculates the Black Height of RedBlackTree
+     * @return int Black Height
      */
     public int calcBlackHeight() {
-        return 0;
+        Node n = root;
+        if(n == null) {
+            return 0;
+        }
+        int count = 1;
+        while(n.rightChild != null) {
+            count++;
+            n = n.rightChild;
+        }
+        return count;
     }
 
     /**
-     *
-     * @return
+     * Calculates the Average Depth of RedBlackTree
+     * @return Average Depth
      */
     public double calcAverageDepth() {
         return 0.0;
@@ -267,7 +276,13 @@ public class RedBlackTree<K extends Comparable<K>,V>{
         // Fix Broken Tree Structure
 
         // 1. If current is black and right child is red, ROTATE LEFT
-        if (root.rightChild != null && !root.isRed && root.rightChild.isRed) {
+        //TODO - CHECK THIS!!!!!!!
+        if(root.leftChild == null && root.rightChild.isRed) {
+            System.out.println("Rotated " + root.key + " Left");
+            rotateLeft(root);
+        }
+
+        if (root.rightChild != null && root.leftChild != null && !root.leftChild.isRed && root.rightChild.isRed) {
             System.out.println("Rotated " + root.key + " Left");
             rotateLeft(root);
         }
@@ -290,6 +305,29 @@ public class RedBlackTree<K extends Comparable<K>,V>{
 
         root.updateSize();
 
+        return root;
+    }
+
+    /**
+     *
+     * @param root
+     * @param key
+     * @param value
+     * @return
+     */
+    private Node findAndDelete(Node root, K key, V value) {
+        if(root == null) {
+            return root;
+        }
+        // No children (leaf case)
+        if(root.leftChild == null && root.rightChild == null && root.key.compareTo(key) == 0){
+            return null;
+        }
+
+        // 1 child case (left red leaf as child)
+        if(root.leftChild != null && root.leftChild.isRed && root.rightChild == null) {
+
+        }
         return root;
     }
 

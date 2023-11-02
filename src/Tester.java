@@ -12,8 +12,16 @@ public class Tester {
         tree.put('H', 16);
         System.out.println(tree.getRootKey());
         System.out.println(tree.size());
+        System.out.println(tree.calcBlackHeight());
 
         assert(tree.getRootKey() == 'R');
+
+        RedBlackTree<Character, Integer> tree2 = new RedBlackTree<Character,Integer>();
+        tree2.put('E', 10);
+        tree2.put('C', 12);
+        tree2.put('D', 14);
+
+        assert(tree2.getRootKey() == 'D');
 
     }
 }
