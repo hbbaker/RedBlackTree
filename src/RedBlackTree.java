@@ -57,6 +57,7 @@ public class RedBlackTree<K extends Comparable<K>,V>{
         private Node delete(Object[] val) {
             assert(this.isRed && this.rightChild == null);
             val[0] = this.value;
+            System.out.println("Deleting: " + this.key);
             return this.leftChild;
         }
 
@@ -129,6 +130,7 @@ public class RedBlackTree<K extends Comparable<K>,V>{
      * @return
      */
     public V get(K key) {
+
         return null;
     }
 
@@ -148,7 +150,7 @@ public class RedBlackTree<K extends Comparable<K>,V>{
         if(root != null) {
             root.isRed = false;
         }
-        if(root != null) {
+        if(val[0] != null) {
             return (V) val[0];
         } else {
             return null;
@@ -331,10 +333,12 @@ public class RedBlackTree<K extends Comparable<K>,V>{
     }
 
     /**
-     * Helper method
-     * @param root
-     * @param key
-     * @return
+     * Helper method for delete() (recursive)
+     * @param root Root node
+     * @param found Stored node of key if found
+     * @param key Key to be deleted
+     * @param val Array to hold value of returned deletion
+     * @return Root node
      */
     private Node findAndDelete(Node root, Node found, K key, Object[] val) {
 
@@ -343,7 +347,7 @@ public class RedBlackTree<K extends Comparable<K>,V>{
         }
         assert(root.isRed);
 
-        int compare = root.key.compareTo(key);
+        int compare = key.compareTo(root.key); //TODO - CHECK THIS: root.key.compareTo(key);
 
         if(compare == 0) {
             // Case 0: No children (leaf case) & Case 1
@@ -357,7 +361,7 @@ public class RedBlackTree<K extends Comparable<K>,V>{
 
         }
         if(compare > 0) { // need to go right
-            System.out.println("went right");
+            System.out.println("went right--------");
             if(root.leftChild != null && root.rightChild != null) {
                 if(!root.leftChild.isRed && !root.rightChild.isRed) {
                     System.out.println("Color flipped going down");
@@ -369,7 +373,7 @@ public class RedBlackTree<K extends Comparable<K>,V>{
                 }
             }
             root.rightChild = findAndDelete(root.rightChild, found, key, val);
-            if(found != null && root.rightChild == null) {
+            if(found != null && root.rightChild == null && val[0] == null) {
                 K rootKey = found.key;
                 V rootVal = found.value;
                 found.key = root.key;
