@@ -20,7 +20,6 @@ public class RedBlackTree<K extends Comparable<K>,V>{
 
         Node leftChild;
         Node rightChild;
-        //Node parent;
 
         /**
          * Constructor for internal Node class for RedBlackTree
@@ -36,7 +35,6 @@ public class RedBlackTree<K extends Comparable<K>,V>{
             isRed = true;
             leftChild = left;
             rightChild = right;
-            //parent = p;
         }
 
         /**
@@ -54,18 +52,58 @@ public class RedBlackTree<K extends Comparable<K>,V>{
         }
 
         /**
-         * Helper to find the Predecessor of a node.
+         * Helper to delete a node and promote its left child
          */
-        private void findPredecessor() {
-
+        private Node delete(Object[] val) {
+            assert(this.isRed && this.rightChild == null);
+            val[0] = this.value;
+            return this.leftChild;
         }
 
         /**
-         * Helper to find the Successor of a node.
+         * Helper to Fix tree structure
          */
-        private void findSuccessor() {
+        private void fixNodes() {
 
+            // 3. If both children are red, COLOR FLIP (helps with delete)
+            if(leftChild != null && rightChild != null) {
+                if(leftChild.isRed && rightChild.isRed) {
+                    colorFlip(this);
+                    System.out.println("Color Flipped " + key);
+                }
+            }
+
+            // 1. If current is black and right child is red, ROTATE LEFT
+            //TODO - CHECK THIS!!!!!!!
+            if(leftChild == null && rightChild != null && rightChild.isRed) {
+                System.out.println("Rotated " + key + " Left");
+                rotateLeft(this);
+            }
+
+            if (rightChild != null && leftChild != null && !leftChild.isRed && rightChild.isRed) {
+                System.out.println("Rotated " + key + " Left");
+                rotateLeft(this);
+            }
+
+            // 2. If left child and left-left grandchild are red, ROTATE RIGHT
+            if(leftChild != null && leftChild.leftChild != null) {
+                if(leftChild.isRed && leftChild.leftChild.isRed) {
+                    System.out.println("Rotated " + key +" Right");
+                    rotateRight(this);
+                }
+            }
+
+            // 3. If both children are red, COLOR FLIP
+            if(leftChild != null && rightChild != null) {
+                if(leftChild.isRed && rightChild.isRed) {
+                    colorFlip(this);
+                    System.out.println("Color Flipped " + key);
+                }
+            }
+
+            updateSize();
         }
+
     }
 
     /**
@@ -100,16 +138,18 @@ public class RedBlackTree<K extends Comparable<K>,V>{
      * @return
      */
     public V delete(K key) {
+        Object[] val = new Object[1];
+
         if(root == null) {
             return null;
         }
         root.isRed = true;
-        root = findAndDelete(root, null, key);
+        root = findAndDelete(root, null, key, val);
         if(root != null) {
             root.isRed = false;
         }
         if(root != null) {
-            return root.value;
+            return (V) val[0];
         } else {
             return null;
         }
@@ -282,116 +322,82 @@ public class RedBlackTree<K extends Comparable<K>,V>{
         }
         if(key.compareTo(root.key) < 0) {
             root.leftChild = findAndAdd(root.leftChild, key, value);
+            root.fixNodes();
         } else {
             root.rightChild = findAndAdd(root.rightChild, key, value);
+            root.fixNodes();
         }
-
-        // Fix Broken Tree Structure
-
-        // 1. If current is black and right child is red, ROTATE LEFT
-        //TODO - CHECK THIS!!!!!!!
-        if(root.leftChild == null && root.rightChild.isRed) {
-            System.out.println("Rotated " + root.key + " Left");
-            rotateLeft(root);
-        }
-
-        if (root.rightChild != null && root.leftChild != null && !root.leftChild.isRed && root.rightChild.isRed) {
-            System.out.println("Rotated " + root.key + " Left");
-            rotateLeft(root);
-        }
-
-        // 2. If left child and left-left grandchild are red, ROTATE RIGHT
-        if(root.leftChild != null && root.leftChild.leftChild != null) {
-            if(root.leftChild.isRed && root.leftChild.leftChild.isRed) {
-                System.out.println("Rotated " + root.key +" Right");
-                rotateRight(root);
-            }
-        }
-
-        // 3. If both children are red, COLOR FLIP
-        if(root.leftChild != null && root.rightChild != null) {
-            if(root.leftChild.isRed && root.rightChild.isRed) {
-                colorFlip(root);
-                System.out.println("Color Flipped " + root.key);
-            }
-        }
-
-        root.updateSize();
-
         return root;
     }
 
     /**
-     *
+     * Helper method
      * @param root
      * @param key
      * @return
      */
-    private Node findAndDelete(Node root, Node found, K key) {
-        Node temp = null;
+    private Node findAndDelete(Node root, Node found, K key, Object[] val) {
 
         if(root == null) {
             return null;
         }
+        assert(root.isRed);
 
+        int compare = root.key.compareTo(key);
 
-        // Case 0: No children (leaf case)
-        if(root.leftChild == null && root.rightChild == null && root.key.compareTo(key) == 0){
-            temp = root;
-            root = null;
-            return temp;
-        }
-
-        // Case 1: 1 child case (left red leaf as child)
-        //TODO - See if red check is redundant, since only possibility
-        if(root.leftChild != null && root.leftChild.isRed && root.rightChild == null) {
-            if(root.key.compareTo(key) == 0) {
-                root = root.leftChild;
-                return root;
+        if(compare == 0) {
+            // Case 0: No children (leaf case) & Case 1
+            if(root.rightChild == null){
+                return root.delete(val);
+            }else {
+                //Case 2:
+                compare = Math.random() >= 0.5? 1: -1; //Thanks, Adam!
+                found = root;
             }
-            root = findAndDelete(root.leftChild, null, key);
+
         }
-
-        //Case 2: 2 Black Node Children
-        if(root.leftChild != null && root.rightChild != null) {
-            if(!root.leftChild.isRed && !root.rightChild.isRed) {
-                colorFlip(root);
-                // Found node to delete?
-                if(root.key.compareTo(key) == 0) {
-                    temp = root;
-                    // TODO - Right or Left
-                    // Continue down to find predecessor or successor
-                    root = findAndDelete(root.leftChild, temp, key); // TODO - FOUND IS PASSED ALL THE WAY DOWN AND NOT CHANGED!
+        if(compare > 0) { // need to go right
+            System.out.println("went right");
+            if(root.leftChild != null && root.rightChild != null) {
+                if(!root.leftChild.isRed && !root.rightChild.isRed) {
+                    System.out.println("Color flipped going down");
+                    colorFlip(root);
                 }
-                // Continue down to find if not node we want to delete
-                if(root.key.compareTo(key) < 0) {
-                    root = findAndDelete(root.leftChild, null, key);
-                } else {
-                    root = findAndDelete(root.rightChild, null, key);
+                if(root.leftChild.isRed && !root.rightChild.isRed) {
+                    System.out.println("Rotated Right going down!");
+                    rotateRight(root);
                 }
-
-                //TODO - Does this check for swap happen inside this case or up top by base case?
-                if(found != null && root.rightChild == null) {
-                    temp = root;
-                    root = null;
-                    return temp;
+            }
+            root.rightChild = findAndDelete(root.rightChild, found, key, val);
+            if(found != null && root.rightChild == null) {
+                K rootKey = found.key;
+                V rootVal = found.value;
+                found.key = root.key;
+                found.value = root.value;
+                root.key = rootKey;
+                root.value = rootVal;
+                return root.delete(val);
+            }
+        } else { // need to go left
+            System.out.println("went left");
+            if(root.leftChild != null && root.rightChild != null) {
+                if(!root.leftChild.isRed && !root.rightChild.isRed) {
+                    colorFlip(root);
                 }
-                // Check if back to found node to delete, swap values and then return found on the way up.
-                if(found != null && root.key.compareTo(key) == 0) {
-                    temp = root;
-                    root.key = found.key;
-                    root.value = found.value;
-                    found.key = temp.key;
-                    found.value = temp.value;
-                }
-
+            }
+            // TODO - Make sure you don't have to do any checks for R left and B right at this case.
+            root.leftChild = findAndDelete(root.leftChild, found, key, val);
+            if(found != null && root.rightChild == null && val[0] == null) {
+                K rootKey = found.key;
+                V rootVal = found.value;
+                found.key = root.key;
+                found.value = root.value;
+                root.key = rootKey;
+                root.value = rootVal;
+                return root.delete(val);
             }
         }
-
-        // TODO - Case 3: Red Left Child and Black Right Child
-
-        // TODO - Fix Red Black errors caused by recursion
-
+        root.fixNodes();
         return root;
     }
 

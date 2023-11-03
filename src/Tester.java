@@ -23,7 +23,7 @@ public class Tester {
 
         assert(tree2.getRootKey() == 'D');
 
-        int testInt = tree2.delete('D');
+        int testInt = tree.delete('R');
         System.out.println(testInt);
     }
 }
