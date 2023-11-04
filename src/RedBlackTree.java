@@ -104,7 +104,6 @@ public class RedBlackTree<K extends Comparable<K>,V>{
 
             updateSize();
         }
-
     }
 
     /**
@@ -269,11 +268,14 @@ public class RedBlackTree<K extends Comparable<K>,V>{
     }
 
     /**
-     *
+     * Calculates the height of the tree, with height being the longest path to the bottom
      * @return
      */
     public int calcHeight() {
-        return 0;
+        if(root == null) {
+            return 0;
+        }
+        return getHeight(root);
     }
 
     /**
@@ -355,7 +357,15 @@ public class RedBlackTree<K extends Comparable<K>,V>{
                 return root.delete(val);
             }else {
                 //Case 2:
-                compare = Math.random() >= 0.5? 1: -1; //Thanks, Adam!
+                // This statement should fix the issue of going right when you don't absolutely have to
+                // to avoid rotating right after finding the key.
+                if(root.leftChild != null) {
+                    if(root.leftChild.isRed && !root.rightChild.isRed) {
+                        compare = -1;
+                    } else {
+                        compare = Math.random() >= 0.5? 1: -1; //Thanks, Adam!
+                    }
+                }
                 found = root;
             }
 
@@ -499,5 +509,33 @@ public class RedBlackTree<K extends Comparable<K>,V>{
         current.isRed = !current.isRed;
 
         assert((current.leftChild.isRed != current.isRed) && (current.rightChild.isRed != current.isRed));
+    }
+
+    /**
+     * Helper method for getHeight()
+     * @param root
+     * @return
+     */
+    private int getHeight(Node root) {
+        if(root == null) {
+            return 0;
+        }
+        if(root.leftChild == null && root.rightChild == null) {
+            return 1;
+        }
+        if(root.leftChild != null && root.rightChild == null) {
+            return 1 + getHeight(root.leftChild);
+        }
+        if(root.leftChild == null) {
+            return 1 + getHeight(root.rightChild);
+        } else {
+            int leftHeight = getHeight(root.leftChild);
+            int rightHeight = getHeight(root.rightChild);
+            if(leftHeight > rightHeight) {
+                return 1 + leftHeight;
+            } else {
+                return 1 + rightHeight;
+            }
+        }
     }
 }

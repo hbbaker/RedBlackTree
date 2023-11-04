@@ -45,8 +45,32 @@ public class Tester {
 
         // Deletion Tests
         intScoreTree.delete(10);
-        System.out.println(intScoreTree.getRootKey());
+        System.out.println("Root Key: " + intScoreTree.getRootKey());
         assert(intScoreTree.getRootKey() == 5 || intScoreTree.getRootKey() == 20);
+
+        //intScoreTree = new RedBlackTree<>();
+
+        /*intScoreTree.put(-7, 'A');
+        intScoreTree.put(-6, 'B');
+        intScoreTree.put(-5, 'C');
+        intScoreTree.put(-4, 'D');
+        intScoreTree.put(-3, 'E');
+        intScoreTree.put(-2, 'F');
+        intScoreTree.put(-1, 'G');
+        intScoreTree.put(0, 'H');
+        intScoreTree.put(1, 'I');
+        intScoreTree.put(2, 'J');
+        intScoreTree.put(3, 'K');
+        intScoreTree.put(4, 'L');
+        intScoreTree.put(5, 'M');
+        intScoreTree.put(6, 'N');
+        intScoreTree.put(7, 'O');*/
+
+        System.out.println("Tree Height: " + intScoreTree.calcHeight());
+        System.out.println("Black Height: " + intScoreTree.calcBlackHeight());
+
+
+
 
     }
 }
