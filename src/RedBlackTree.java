@@ -57,7 +57,6 @@ public class RedBlackTree<K extends Comparable<K>,V>{
         private Node delete(Object[] val) {
             assert(this.isRed && this.rightChild == null);
             val[0] = this.value;
-            System.out.println("Deleting: " + this.key);
             return this.leftChild;
         }
 
@@ -70,26 +69,22 @@ public class RedBlackTree<K extends Comparable<K>,V>{
             if(leftChild != null && rightChild != null) {
                 if(leftChild.isRed && rightChild.isRed) {
                     colorFlip(this);
-                    System.out.println("Color Flipped " + key);
                 }
             }
 
             // 1. If current is black and right child is red, ROTATE LEFT
             //TODO - CHECK THIS!!!!!!!
             if(leftChild == null && rightChild != null && rightChild.isRed) {
-                System.out.println("Rotated " + key + " Left");
                 rotateLeft(this);
             }
 
             if (rightChild != null && leftChild != null && !leftChild.isRed && rightChild.isRed) {
-                System.out.println("Rotated " + key + " Left");
                 rotateLeft(this);
             }
 
             // 2. If left child and left-left grandchild are red, ROTATE RIGHT
             if(leftChild != null && leftChild.leftChild != null) {
                 if(leftChild.isRed && leftChild.leftChild.isRed) {
-                    System.out.println("Rotated " + key +" Right");
                     rotateRight(this);
                 }
             }
@@ -98,7 +93,6 @@ public class RedBlackTree<K extends Comparable<K>,V>{
             if(leftChild != null && rightChild != null) {
                 if(leftChild.isRed && rightChild.isRed) {
                     colorFlip(this);
-                    System.out.println("Color Flipped " + key);
                 }
             }
 
@@ -124,13 +118,18 @@ public class RedBlackTree<K extends Comparable<K>,V>{
     }
 
     /**
-     *
-     * @param key
-     * @return
+     * Gets a value for a given key from the RedBlackTree
+     * @param key Key to search
+     * @return The value at that key (null if element is not in the RedBlackTree)
      */
     public V get(K key) {
-
-        return null;
+        Object[] val = new Object[1];
+        val[0] = findAndGet(root, key);
+        if(val[0] != null) {
+            return (V) val[0];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -371,14 +370,11 @@ public class RedBlackTree<K extends Comparable<K>,V>{
 
         }
         if(compare > 0) { // need to go right
-            System.out.println("went right--------");
             if(root.leftChild != null && root.rightChild != null) {
                 if(!root.leftChild.isRed && !root.rightChild.isRed) {
-                    System.out.println("Color flipped going down");
                     colorFlip(root);
                 }
                 if(root.leftChild.isRed && !root.rightChild.isRed) {
-                    System.out.println("Rotated Right going down!");
                     rotateRight(root);
                 }
             }
@@ -393,13 +389,11 @@ public class RedBlackTree<K extends Comparable<K>,V>{
                 return root.delete(val);
             }
         } else { // need to go left
-            System.out.println("went left");
             if(root.leftChild != null && root.rightChild != null) {
                 if(!root.leftChild.isRed && !root.rightChild.isRed) {
                     colorFlip(root);
                 }
             }
-            // TODO - Make sure you don't have to do any checks for R left and B right at this case.
             root.leftChild = findAndDelete(root.leftChild, found, key, val);
             if(found != null && root.rightChild == null && val[0] == null) {
                 K rootKey = found.key;
@@ -504,10 +498,12 @@ public class RedBlackTree<K extends Comparable<K>,V>{
      * @param current The "root node" to do the Color Flip on.
      */
     private void colorFlip(Node current) {
+        //Flips color of parent and children to opposite
         current.leftChild.isRed = !current.leftChild.isRed;
         current.rightChild.isRed = !current.rightChild.isRed;
         current.isRed = !current.isRed;
 
+        //Asserts that children are opposite of parent
         assert((current.leftChild.isRed != current.isRed) && (current.rightChild.isRed != current.isRed));
     }
 
@@ -536,6 +532,24 @@ public class RedBlackTree<K extends Comparable<K>,V>{
             } else {
                 return 1 + rightHeight;
             }
+        }
+    }
+
+    private V findAndGet(Node root, K key) {
+        if(root == null) {
+            return null;
+        }
+
+        int compare = key.compareTo(root.key);
+
+        if(compare == 0) {
+            return root.value;
+        }
+        //Go left
+        if(compare < 0) {
+            return findAndGet(root.leftChild, key);
+        }else { // Go right
+            return findAndGet(root.rightChild, key);
         }
     }
 }

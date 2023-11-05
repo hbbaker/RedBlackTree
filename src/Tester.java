@@ -48,9 +48,9 @@ public class Tester {
         System.out.println("Root Key: " + intScoreTree.getRootKey());
         assert(intScoreTree.getRootKey() == 5 || intScoreTree.getRootKey() == 20);
 
-        //intScoreTree = new RedBlackTree<>();
+        intScoreTree = new RedBlackTree<>();
 
-        /*intScoreTree.put(-7, 'A');
+        intScoreTree.put(-7, 'A');
         intScoreTree.put(-6, 'B');
         intScoreTree.put(-5, 'C');
         intScoreTree.put(-4, 'D');
@@ -64,12 +64,12 @@ public class Tester {
         intScoreTree.put(4, 'L');
         intScoreTree.put(5, 'M');
         intScoreTree.put(6, 'N');
-        intScoreTree.put(7, 'O');*/
+        intScoreTree.put(7, 'O');
 
         System.out.println("Tree Height: " + intScoreTree.calcHeight());
         System.out.println("Black Height: " + intScoreTree.calcBlackHeight());
 
-
+        System.out.println("Getting Key 3: " + intScoreTree.get(3));
 
 
     }
