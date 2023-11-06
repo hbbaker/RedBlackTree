@@ -215,8 +215,8 @@ public class RedBlackTree<K extends Comparable<K>,V>{
     }
 
     /**
-     *
-     * @return
+     * Returns the key of the Root node of RedBlackTree
+     * @return Key of Root Node.
      */
     public K getRootKey() {
         return this.root.key;
@@ -246,7 +246,6 @@ public class RedBlackTree<K extends Comparable<K>,V>{
      * @return
      */
     public int findRank(K key) {
-        //TODO - FIX THIS
         Node current = root;
         int rank = 0;
         while(current != null) {
@@ -331,10 +330,9 @@ public class RedBlackTree<K extends Comparable<K>,V>{
             return Double.NaN;
         } else {
             int depth = 0;
-            int total[] = new int[1];
-            addDepths(root, depth, total);
+
             //TODO - Check to see if tree size needs to include root??
-            return (double) total[0] / ((double) root.size);
+            return (double) addDepths(root, depth) / ((double) root.size);
         }
     }
 
@@ -595,18 +593,17 @@ public class RedBlackTree<K extends Comparable<K>,V>{
         }
     }
 
-    private int addDepths(Node root, int depth, int[] total) {
+    private int addDepths(Node root, int depth) {
         if(root == null) {
             return depth;
         }else if(root.leftChild == null && root.rightChild == null) {
-            total[0] += depth;
             return depth;
         }else if(root.leftChild != null && root.rightChild == null) {
-            return depth + addDepths(root.leftChild, depth + 1, total);
+            return depth + addDepths(root.leftChild, depth + 1);
         }else if(root.leftChild == null) {
-            return depth + addDepths(root.rightChild, depth + 1, total);
+            return depth + addDepths(root.rightChild, depth + 1);
         }else {
-            return depth + addDepths(root.leftChild, depth + 1, total) + addDepths(root.rightChild, depth + 1, total);
+            return depth + addDepths(root.leftChild, depth + 1) + addDepths(root.rightChild, depth + 1);
         }
     }
 
