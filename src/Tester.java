@@ -73,6 +73,10 @@ public class Tester {
 
         System.out.println("Average Depth of Tree: " + intScoreTree.calcAverageDepth());
 
+        System.out.println("Number of Reds: " + intScoreTree.countRedNodes());
+
+        System.out.println("Find rank of H: " + tree.findRank('H'));
+
 
     }
 }

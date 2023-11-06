@@ -241,12 +241,27 @@ public class RedBlackTree<K extends Comparable<K>,V>{
     }
 
     /**
-     *
+     * Finds the Rank of a specified Key in RedBlackTree
      * @param key
      * @return
      */
     public int findRank(K key) {
-        return 0;
+        //TODO - FIX THIS
+        Node current = root;
+        int rank = -1;
+        while(current != null) {
+            int compare = key.compareTo(root.key);
+            if(compare == 0) {
+                rank += current.leftChild.size;
+            }
+            if(compare < 0) { // Go Left
+                current = current.leftChild;
+            } else { // Go Right
+                rank += 1 + current.leftChild.size;
+                current = current.rightChild;
+            }
+        }
+        return rank;
     }
 
     /**
@@ -259,11 +274,11 @@ public class RedBlackTree<K extends Comparable<K>,V>{
     }
 
     /**
-     *
-     * @return
+     * Counts the number of Red Nodes in the tree
+     * @return Number of red nodes in the RedBlackTree
      */
     public int countRedNodes() {
-        return 0;
+        return countReds(root);
     }
 
     /**
@@ -579,6 +594,37 @@ public class RedBlackTree<K extends Comparable<K>,V>{
             return depth + addDepths(root.rightChild, depth + 1, total);
         }else {
             return depth + addDepths(root.leftChild, depth + 1, total) + addDepths(root.rightChild, depth + 1, total);
+        }
+    }
+
+    private int countReds(Node root) {
+        if(root == null) {
+            return 0;
+        }
+        if(root.leftChild == null && root.rightChild == null) {
+            if(root.isRed) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }else if(root.leftChild != null && root.rightChild == null) {
+            if(root.isRed) {
+                return 1 + countReds(root.leftChild);
+            } else {
+                return countReds(root.leftChild);
+            }
+        }else if(root.leftChild == null) {
+            if(root.isRed) {
+                return 1 + countReds(root.rightChild);
+            } else {
+                return countReds(root.rightChild);
+            }
+        }else {
+            if(root.isRed) {
+                return 1 + countReds(root.leftChild) + countReds(root.rightChild);
+            } else {
+                return countReds(root.leftChild) + countReds(root.rightChild);
+            }
         }
     }
 }
