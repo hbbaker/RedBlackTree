@@ -75,7 +75,7 @@ public class Tester {
 
         System.out.println("Number of Reds: " + intScoreTree.countRedNodes());
 
-        System.out.println("Find rank of H: " + tree.findRank('H'));
+        System.out.println("Find rank of Z: " + tree.findRank('Z'));
 
 
     }

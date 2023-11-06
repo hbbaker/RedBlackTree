@@ -248,17 +248,30 @@ public class RedBlackTree<K extends Comparable<K>,V>{
     public int findRank(K key) {
         //TODO - FIX THIS
         Node current = root;
-        int rank = -1;
+        int rank = 0;
         while(current != null) {
-            int compare = key.compareTo(root.key);
+            int compare = key.compareTo(current.key);
             if(compare == 0) {
-                rank += current.leftChild.size;
+                if(current.leftChild == null) {
+                    return rank;
+                } else {
+                    return rank += current.leftChild.size;
+                }
             }
             if(compare < 0) { // Go Left
-                current = current.leftChild;
-            } else { // Go Right
-                rank += 1 + current.leftChild.size;
-                current = current.rightChild;
+                if(current.leftChild == null) {
+                    return -1;
+                } else {
+                    current = current.leftChild;
+                }
+            }
+            if(compare > 0) { // Go Right
+                if(current.rightChild == null) {
+                    return -1;
+                } else {
+                    rank += 1 + current.leftChild.size;
+                    current = current.rightChild;
+                }
             }
         }
         return rank;
