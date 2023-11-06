@@ -178,7 +178,7 @@ public class RedBlackTree<K extends Comparable<K>,V>{
      * @return
      */
     public boolean isEmpty() {
-        return false;
+        return root == null;
     }
 
     /**
@@ -303,9 +303,10 @@ public class RedBlackTree<K extends Comparable<K>,V>{
             return Double.NaN;
         } else {
             int depth = 0;
-            int total = 0;
+            int total[] = new int[1];
             addDepths(root, depth, total);
-            return (double) total / (double) root.size;
+            //TODO - Check to see if tree size needs to include root??
+            return (double) total[0] / ((double) root.size);
         }
     }
 
@@ -566,23 +567,18 @@ public class RedBlackTree<K extends Comparable<K>,V>{
         }
     }
 
-    private int addDepths(Node root, int depth, int total) {
+    private int addDepths(Node root, int depth, int[] total) {
         if(root == null) {
             return depth;
-        }
-        if(root.leftChild == null && root.rightChild == null) {
-            total += depth;
+        }else if(root.leftChild == null && root.rightChild == null) {
+            total[0] += depth;
             return depth;
-        }
-        if(root.leftChild != null && root.rightChild == null) {
+        }else if(root.leftChild != null && root.rightChild == null) {
             return depth + addDepths(root.leftChild, depth + 1, total);
-        }
-        if(root.leftChild == null && root.rightChild != null) {
+        }else if(root.leftChild == null) {
             return depth + addDepths(root.rightChild, depth + 1, total);
-        }
-        if(root.leftChild != null && root.rightChild != null) {
+        }else {
             return depth + addDepths(root.leftChild, depth + 1, total) + addDepths(root.rightChild, depth + 1, total);
         }
-        return depth;
     }
 }

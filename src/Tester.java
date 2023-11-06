@@ -71,7 +71,7 @@ public class Tester {
 
         System.out.println("Getting Key 3: " + intScoreTree.get(3));
 
-        System.out.println("Average Depth of Tree: " + tree.calcAverageDepth());
+        System.out.println("Average Depth of Tree: " + intScoreTree.calcAverageDepth());
 
 
     }
