@@ -23,11 +23,11 @@ public class Tester {
 
         assert(tree2.getRootKey() == 'D');
 
-        System.out.println("Deleting R");
-        int testInt = tree.delete('E');
-        System.out.println(testInt);
-        testInt = tree.delete('R'); // Delete something that isn't in the tree
-        System.out.println(testInt);
+        //System.out.println("Deleting R");
+        //int testInt = tree.delete('E');
+        //System.out.println(testInt);
+        //testInt = tree.delete('R'); // Delete something that isn't in the tree
+        //System.out.println(testInt);
 
         RedBlackTree<Integer, Character> intScoreTree = new RedBlackTree<>();
 
@@ -70,6 +70,8 @@ public class Tester {
         System.out.println("Black Height: " + intScoreTree.calcBlackHeight());
 
         System.out.println("Getting Key 3: " + intScoreTree.get(3));
+
+        System.out.println("Average Depth of Tree: " + tree.calcAverageDepth());
 
 
     }

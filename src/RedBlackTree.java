@@ -299,7 +299,14 @@ public class RedBlackTree<K extends Comparable<K>,V>{
      * @return Average Depth
      */
     public double calcAverageDepth() {
-        return 0.0;
+        if (root == null) {
+            return Double.NaN;
+        } else {
+            int depth = 0;
+            int total = 0;
+            addDepths(root, depth, total);
+            return (double) total / (double) root.size;
+        }
     }
 
     // PRIVATE METHODS
@@ -535,6 +542,12 @@ public class RedBlackTree<K extends Comparable<K>,V>{
         }
     }
 
+    /**
+     * Helper method for get()
+     * @param root Root to check
+     * @param key Key to find
+     * @return Value of found Key (or null if not existing)
+     */
     private V findAndGet(Node root, K key) {
         if(root == null) {
             return null;
@@ -551,5 +564,25 @@ public class RedBlackTree<K extends Comparable<K>,V>{
         }else { // Go right
             return findAndGet(root.rightChild, key);
         }
+    }
+
+    private int addDepths(Node root, int depth, int total) {
+        if(root == null) {
+            return depth;
+        }
+        if(root.leftChild == null && root.rightChild == null) {
+            total += depth;
+            return depth;
+        }
+        if(root.leftChild != null && root.rightChild == null) {
+            return depth + addDepths(root.leftChild, depth + 1, total);
+        }
+        if(root.leftChild == null && root.rightChild != null) {
+            return depth + addDepths(root.rightChild, depth + 1, total);
+        }
+        if(root.leftChild != null && root.rightChild != null) {
+            return depth + addDepths(root.leftChild, depth + 1, total) + addDepths(root.rightChild, depth + 1, total);
+        }
+        return depth;
     }
 }
