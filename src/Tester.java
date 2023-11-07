@@ -77,6 +77,8 @@ public class Tester {
 
         System.out.println("Find rank of Z: " + tree.findRank('Z'));
 
+        System.out.println("Find key at rank 8: " + tree.select(8));
+
 
     }
 }

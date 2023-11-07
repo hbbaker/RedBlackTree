@@ -277,11 +277,32 @@ public class RedBlackTree<K extends Comparable<K>,V>{
     }
 
     /**
-     *
-     * @param rank
-     * @return
+     * Returns the Key for the input Rank
+     * @param rank Rank of Key to be found
+     * @return Key found (null if rank is greater than RedBlackTree size)
      */
     public K select(int rank) {
+        if(rank > root.size) {
+            return null;
+        }
+        Node current = root;
+        int leftSize;
+        while(current != null) {
+            if(current.leftChild != null) {
+                leftSize = current.leftChild.size;
+            } else {
+                leftSize = 0;
+            }
+            if(leftSize == rank) {
+                return current.key;
+            }
+            if(leftSize < rank) { // Go right
+                rank -= (leftSize + 1);
+                current = current.rightChild;
+            }else { // Go left
+                current = current.leftChild;
+            }
+        }
         return null;
     }
 
