@@ -201,12 +201,12 @@ public class RedBlackTree<K extends Comparable<K>,V>{
     }
 
     /**
-     *
-     * @param value
-     * @return
+     * Reverse Lookup Method
+     * @param value Value to be searched for
+     * @return Key of Value, null if Value is not in RedBlackTree
      */
     public K reverseLookup(V value) {
-        return null;
+        return getKeyFromVal(root, value);
     }
 
     /**
@@ -335,7 +335,7 @@ public class RedBlackTree<K extends Comparable<K>,V>{
 
     /**
      * Calculates the height of the tree, with height being the longest path to the bottom
-     * @return
+     * @return The longest path through RedBlackTree
      */
     public int calcHeight() {
         if(root == null) {
@@ -676,5 +676,31 @@ public class RedBlackTree<K extends Comparable<K>,V>{
                 return countReds(root.leftChild) + countReds(root.rightChild);
             }
         }
+    }
+
+    /**
+     * Helper for reverseLookup()
+     * @param root Current Node
+     * @param val Search Value
+     * @return Key of input Value
+     */
+    private K getKeyFromVal(Node root, V val) {
+        if(root == null) {
+            return null;
+        }
+        if(root.value == val) {
+            return root.key;
+        } else {
+            K left = getKeyFromVal(root.leftChild,val);
+            if(left != null) {
+                return left;
+            } else {
+                K right = getKeyFromVal(root.rightChild, val);
+                if(right != null) {
+                    return right;
+                }
+            }
+        }
+        return null;
     }
 }
