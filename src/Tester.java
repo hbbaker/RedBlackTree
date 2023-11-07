@@ -79,6 +79,10 @@ public class Tester {
 
         System.out.println("Find key at rank 8: " + tree.select(8));
 
+        System.out.println("Find first key in intScoreTree: " + intScoreTree.findFirstKey());
 
+        System.out.println("Find last key in intScoreTree: " + intScoreTree.findLastKey());
+
+        System.out.println(tree.containsKey('Z'));
     }
 }

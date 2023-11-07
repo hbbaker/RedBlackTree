@@ -156,11 +156,22 @@ public class RedBlackTree<K extends Comparable<K>,V>{
     }
 
     /**
-     *
-     * @param key
-     * @return
+     * Returns if RedBlackTree contains Key
+     * @param key Key to Search
+     * @return True if RBT contains Key, else False
      */
     public boolean containsKey(K key) {
+        Node current = root;
+        while(current != null) {
+            int compare = key.compareTo(current.key);
+            if(compare == 0) {
+                return true;
+            } else if(compare > 0) { // Go right
+                current = current.rightChild;
+            } else { // Go left
+                current = current.leftChild;
+            }
+        }
         return false;
     }
 
@@ -199,19 +210,27 @@ public class RedBlackTree<K extends Comparable<K>,V>{
     }
 
     /**
-     *
-     * @return
+     * Finds the first (smallest) key in RedBlackTree
+     * @return First key in RedBlackTree
      */
     public K findFirstKey() {
-        return null;
+        Node current = root;
+        while(current.leftChild != null) {
+            current = current.leftChild;
+        }
+        return current.key;
     }
 
     /**
-     *
-     * @return
+     * Finds the last (greatest) key in RedBlackTree
+     * @return Last key in RedBlackTree
      */
     public K findLastKey() {
-        return null;
+        Node current = root;
+        while(current.rightChild != null) {
+            current = current.rightChild;
+        }
+        return current.key;
     }
 
     /**
