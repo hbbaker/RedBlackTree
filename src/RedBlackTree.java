@@ -241,27 +241,45 @@ public class RedBlackTree<K extends Comparable<K>,V>{
     }
 
     /**
-     *
-     * @param key
-     * @return
+     * Finds the Predecessor of a given Key
+     * @param key Key to search for predecessor of
+     * @return Predecessor of K, null if Predecessor does not exist in RedBlackTree
      */
     public K findPredecessor(K key) {
-        return null;
-    } //TODO - THIS
+        if(root == null) {
+            return null;
+        }
+        Object[] predecessor = new Object[1];
+        Node foundPredecessor = getPredecessor(root, key, predecessor);
+        if(foundPredecessor == null) {
+            return null;
+        } else {
+            return foundPredecessor.key;
+        }
+    }
 
     /**
-     *
-     * @param key
-     * @return
+     * Finds the Successor of key K
+     * @param key Key to search for successor of
+     * @return Key of successor to K
      */
     public K findSuccessor(K key) {
-        return null;
-    } //TODO - THIS
+        if(root == null) {
+            return null;
+        }
+        Object[] successor = new Object[1];
+        Node foundSuccessor = getSuccessor(root, key, successor);
+        if(foundSuccessor == null) {
+            return null;
+        } else {
+            return foundSuccessor.key;
+        }
+    }
 
     /**
      * Finds the Rank of a specified Key in RedBlackTree
-     * @param key
-     * @return
+     * @param key Key to find
+     * @return Rank of K in RedBlackTree, -1 if key does not exist
      */
     public int findRank(K key) {
         Node current = root;
@@ -725,5 +743,75 @@ public class RedBlackTree<K extends Comparable<K>,V>{
             }
         }
         return false;
+    }
+
+    /**
+     * Helper for findPredecessor() (recursive)
+     * @param root Current node
+     * @param key Key to search
+     * @param predecessor Stores predecessor on downward recursion in case
+     * @return Node of predecessor to Node with key K
+     */
+    private Node getPredecessor(Node root, K key, Object[] predecessor) {
+        if(root == null) {
+            return null;
+        }
+        int compare = key.compareTo(root.key);
+        if(compare == 0) { // Found key, if I have left go left and right until cant, if I can't go right then return predecessor
+            if(root.leftChild == null) {
+                return (Node) predecessor[0];
+            } else {
+                Node current = root.leftChild;
+                while(current != null) {
+                    if(current.rightChild != null) {
+                        current = current.rightChild;
+                    } else {
+                        return current;
+                    }
+                }
+            }
+        } else if(compare < 0) { // go left and repeat
+            return getPredecessor(root.leftChild, key, predecessor);
+
+        } else {  // go right, save predecessor Node, and repeat
+            predecessor[0] = root;
+            return getPredecessor(root.rightChild, key, predecessor);
+        }
+        return root;
+    }
+
+    /**
+     * Helper for findSuccessor()
+     * @param root Current node
+     * @param key Key to search
+     * @param successor Node of successor to Node with key K
+     * @return Node of successor to Node of key K
+     */
+    private Node getSuccessor(Node root, K key, Object[] successor) {
+        if(root == null) {
+            return null;
+        }
+        int compare = key.compareTo(root.key);
+        if(compare == 0) { // Found key, if I have left go left and right until cant, if I can't go right then return predecessor
+            if(root.rightChild == null) {
+                return (Node) successor[0];
+            } else {
+                Node current = root.rightChild;
+                while(current != null) {
+                    if(current.leftChild != null) {
+                        current = current.leftChild;
+                    } else {
+                        return current;
+                    }
+                }
+            }
+        } else if(compare < 0) { // go left, save successor Node,  and repeat
+            successor[0] = root;
+            return getPredecessor(root.leftChild, key, successor);
+
+        } else {  // go right and repeat
+            return getPredecessor(root.rightChild, key, successor);
+        }
+        return root;
     }
 }

@@ -50,8 +50,9 @@ public class Tester {
 
         intScoreTree = new RedBlackTree<>();
 
-        System.out.println("Empty RBT AVGD: " +intScoreTree.calcAverageDepth());
+        System.out.println("Empty RBT AVGD: " + intScoreTree.calcAverageDepth());
 
+        // Test inputting ordered list into RBT
         intScoreTree.put(-7, 'A');
         intScoreTree.put(-6, 'B');
         intScoreTree.put(-5, 'C');
@@ -90,5 +91,9 @@ public class Tester {
         System.out.println("Getting Key for Value 16: " + tree.reverseLookup(16));
 
         System.out.println("tree contains Value 16: " + tree.containsValue(37));
+
+        System.out.println("Predecessor of 0: " + intScoreTree.findPredecessor(0));
+
+        System.out.println("Successor of R: " + tree.findSuccessor('R'));
     }
 }
