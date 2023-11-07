@@ -23,12 +23,6 @@ public class Tester {
 
         assert(tree2.getRootKey() == 'D');
 
-        //System.out.println("Deleting R");
-        //int testInt = tree.delete('E');
-        //System.out.println(testInt);
-        //testInt = tree.delete('R'); // Delete something that isn't in the tree
-        //System.out.println(testInt);
-
         RedBlackTree<Integer, Character> intScoreTree = new RedBlackTree<>();
 
         // Insertion Tests
@@ -90,10 +84,16 @@ public class Tester {
 
         System.out.println("Getting Key for Value 16: " + tree.reverseLookup(16));
 
-        System.out.println("tree contains Value 16: " + tree.containsValue(37));
+        System.out.println("tree contains Value 16: " + tree.containsValue(16));
 
         System.out.println("Predecessor of 0: " + intScoreTree.findPredecessor(0));
 
         System.out.println("Successor of R: " + tree.findSuccessor('R'));
+
+        System.out.println("Deleting E");
+        int testInt = tree.delete('E');
+        System.out.println(testInt);
+        assert(tree.delete('E') == null); // Delete something that isn't in the tree
+        System.out.println(testInt);
     }
 }

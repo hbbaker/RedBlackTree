@@ -1,7 +1,7 @@
 /**
  * Implementation of a Red Black Tree for CS361
- * @param <K>
- * @param <V>
+ * @param <K> Key
+ * @param <V> Value
  * @author Henry Baker
  * @version 2023.06.11
  */
@@ -132,9 +132,9 @@ public class RedBlackTree<K extends Comparable<K>,V>{
     }
 
     /**
-     * Deletes a <K,V> pair from RedBlackTree
+     * Deletes a K,V pair from RedBlackTree
      * @param key Key to be deleted
-     * @return Value removed from RedBlackTree
+     * @return value removed from RedBlackTree
      */
     public V delete(K key) {
         Object[] val = new Object[1];
