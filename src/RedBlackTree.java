@@ -792,7 +792,7 @@ public class RedBlackTree<K extends Comparable<K>,V>{
             return null;
         }
         int compare = key.compareTo(root.key);
-        if(compare == 0) { // Found key, if I have left go left and right until cant, if I can't go right then return predecessor
+        if(compare == 0) { // Found key, if I have right, go right and left until cant, if I can't go right then return predecessor
             if(root.rightChild == null) {
                 return (Node) successor[0];
             } else {
