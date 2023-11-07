@@ -184,8 +184,8 @@ public class RedBlackTree<K extends Comparable<K>,V>{
     }
 
     /**
-     *
-     * @return
+     * Returns if RedBlackTree is empty
+     * @return True if RedBlackTree is empty, else false
      */
     public boolean isEmpty() {
         return root == null;
