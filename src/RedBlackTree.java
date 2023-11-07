@@ -3,7 +3,7 @@
  * @param <K>
  * @param <V>
  * @author Henry Baker
- * @version 2023.30.10
+ * @version 2023.06.11
  */
 public class RedBlackTree<K extends Comparable<K>,V>{
     Node root;
@@ -73,7 +73,6 @@ public class RedBlackTree<K extends Comparable<K>,V>{
             }
 
             // 1. If current is black and right child is red, ROTATE LEFT
-            //TODO - CHECK THIS!!!!!!!
             if(leftChild == null && rightChild != null && rightChild.isRed) {
                 rotateLeft(this);
             }
@@ -133,9 +132,9 @@ public class RedBlackTree<K extends Comparable<K>,V>{
     }
 
     /**
-     *
-     * @param key
-     * @return
+     * Deletes a <K,V> pair from RedBlackTree
+     * @param key Key to be deleted
+     * @return Value removed from RedBlackTree
      */
     public V delete(K key) {
         Object[] val = new Object[1];
@@ -182,7 +181,7 @@ public class RedBlackTree<K extends Comparable<K>,V>{
      */
     public boolean containsValue(V value) {
         return false;
-    }
+    } //TODO - THIS
 
     /**
      *
@@ -248,7 +247,7 @@ public class RedBlackTree<K extends Comparable<K>,V>{
      */
     public K findPredecessor(K key) {
         return null;
-    }
+    } //TODO - THIS
 
     /**
      *
@@ -257,7 +256,7 @@ public class RedBlackTree<K extends Comparable<K>,V>{
      */
     public K findSuccessor(K key) {
         return null;
-    }
+    } //TODO - THIS
 
     /**
      * Finds the Rank of a specified Key in RedBlackTree
@@ -363,15 +362,13 @@ public class RedBlackTree<K extends Comparable<K>,V>{
 
     /**
      * Calculates the Average Depth of RedBlackTree
-     * @return Average Depth
+     * @return Average Depth of RedBlackTree
      */
     public double calcAverageDepth() {
         if (root == null) {
             return Double.NaN;
         } else {
             int depth = 0;
-
-            //TODO - Check to see if tree size needs to include root??
             return (double) addDepths(root, depth) / ((double) root.size);
         }
     }
@@ -422,7 +419,7 @@ public class RedBlackTree<K extends Comparable<K>,V>{
         }
         assert(root.isRed);
 
-        int compare = key.compareTo(root.key); //TODO - CHECK THIS: root.key.compareTo(key);
+        int compare = key.compareTo(root.key);
 
         if(compare == 0) {
             // Case 0: No children (leaf case) & Case 1

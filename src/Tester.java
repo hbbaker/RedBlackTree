@@ -50,6 +50,8 @@ public class Tester {
 
         intScoreTree = new RedBlackTree<>();
 
+        System.out.println("Empty RBT AVGD: " +intScoreTree.calcAverageDepth());
+
         intScoreTree.put(-7, 'A');
         intScoreTree.put(-6, 'B');
         intScoreTree.put(-5, 'C');
