@@ -175,13 +175,13 @@ public class RedBlackTree<K extends Comparable<K>,V>{
     }
 
     /**
-     *
-     * @param value
-     * @return
+     * Checks if a given value exists in RedBlackTree
+     * @param value Value to seach
+     * @return True if RedBlackTree contains value, else false
      */
     public boolean containsValue(V value) {
-        return false;
-    } //TODO - THIS
+        return getVal(root, value);
+    }
 
     /**
      *
@@ -192,8 +192,8 @@ public class RedBlackTree<K extends Comparable<K>,V>{
     }
 
     /**
-     *
-     * @return
+     * Gets size of RedBlackTree
+     * @return Size of RedBlackTree
      */
     public int size() {
         return this.root.size;
@@ -699,5 +699,31 @@ public class RedBlackTree<K extends Comparable<K>,V>{
             }
         }
         return null;
+    }
+
+    /**
+     * Helper for containsValue()
+     * @param root Current Node
+     * @param val Search Value
+     * @return True if value exist, else false
+     */
+    private boolean getVal(Node root, V val) {
+        if(root == null) {
+            return false;
+        }
+        if(root.value == val) {
+            return true;
+        } else {
+            boolean left = getVal(root.leftChild,val);
+            if(left) {
+                return left;
+            } else {
+                boolean right = getVal(root.rightChild, val);
+                if(right) {
+                    return right;
+                }
+            }
+        }
+        return false;
     }
 }

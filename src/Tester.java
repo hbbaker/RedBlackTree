@@ -88,5 +88,7 @@ public class Tester {
         System.out.println(tree.containsKey('Z'));
 
         System.out.println("Getting Key for Value 16: " + tree.reverseLookup(16));
+
+        System.out.println("tree contains Value 16: " + tree.containsValue(37));
     }
 }
